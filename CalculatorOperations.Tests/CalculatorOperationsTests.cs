@@ -97,5 +97,13 @@ namespace CalculatorOperations.Tests
 
             Assert.That(() => sut.UndoOperation(), Throws.Nothing);
         }
+        [Test]
+        public void ShouldThrowDivideByZeroException()
+        {
+            var sut = new CalculatorController();
+
+            var result = sut.OnOperation("2/");
+            Assert.That(() => sut.OnOperation("0="), Throws.TypeOf<DivideByZeroException>());
+        }
     }
 }

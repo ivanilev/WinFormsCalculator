@@ -10,7 +10,7 @@ namespace CalculatorOperations
     {
         public double Calculate(double? a, double? b)
         {
-            if (b == 0 || b.Equals(null)) { throw new ArgumentException(); }
+            if (b == 0 || b.Equals(null)) { throw new DivideByZeroException(); }
 
             return (a ?? 0) / (double)b;
         }

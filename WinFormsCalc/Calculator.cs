@@ -160,10 +160,11 @@ namespace WinFormsCalc
                 case Keys.Add:
                 case Keys.Divide:
                 case Keys.Multiply:
-                case Keys.Subtract: { CalculateArithmeticFunction(tbResult.Text); SetCursorAtEndOFTextBox(); break; }
-                case Keys.Enter: { tbResult.Text = CalculateArithmeticFunction(tbResult.Text + "="); SetCursorAtEndOFTextBox(); break; }
-
+                case Keys.Subtract: { CalculateArithmeticFunction(tbResult.Text); break; }
+                case Keys.Enter: { tbResult.Text = CalculateArithmeticFunction(tbResult.Text + "="); break; }
             }
+
+            SetCursorAtEndOFTextBox();
         }
 
 
