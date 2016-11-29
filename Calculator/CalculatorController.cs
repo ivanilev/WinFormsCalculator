@@ -45,9 +45,6 @@ namespace CalculatorOperations
             memory = null;
         }
 
-        
-      
-
         public bool Validate(string text)
         {
             Regex regex = new Regex(@"^[1-9][0-9]*[+\-*\/=]$");
@@ -62,42 +59,69 @@ namespace CalculatorOperations
         /// <returns>The calculated value.</returns>
         public double OnOperation(string equation)
         {
-            //Declare variables for the symbol and the number from the equation 
+
+            //Parse the number and the symbol from the Equation
             double parsedNumber;
             char symbol;
-
-            //Assign the number to the variable
             string number = equation.Substring(0, equation.Length - 1);
             if (!double.TryParse(number, out parsedNumber)) { parsedNumber = 0.00; }
-            //Assign the symbol to the variable
             symbol = equation[equation.Length - 1];
 
-            //If it's the first operation save the process in result history and return the value of param1
+            //Declare a variable for the result
+            double? result;
+
+            //If the first parameter is null assign the current value and operation to the internal properties. Return value is the first parameter.
             if (param1.Equals(null))
             {
                 param1 = parsedNumber;
                 currentOperation = oFactory.GetOperation(symbol);
-                operationHistory.Push(new Calculator.ResultHistory(
-                    oFactory.GetOperation(symbol),
-                    param1
-                    ));
                 return param1 ?? 0.00;
             }
+            else if //if the last two operations are "=" 
+                ((oFactory.GetOperation(symbol).GetType() == currentOperation.GetType()) &&
+                currentOperation.GetType() == typeof(Equate))                
+                {
+                    param2 = parsedNumber;
+                    result = currentOperation.Calculate(param1, param2); //calculate the result
 
-            //If not - save the process, save the result in param1 and return the value of param1 (a.k.a. the result)
-            param2 = parsedNumber;
-            lastOperation = currentOperation;
-            currentOperation = oFactory.GetOperation(symbol);
+                    //Save operation
+                    operationHistory.Push(new Calculator.ResultHistory(
+                            currentOperation,
+                            param1,
+                            param2));
+                    
+                    //Nullify all parameters
+                    param1 = null;
+                    param2 = null;
+                    currentOperation = null;
 
+                }
+                else //All other cases:
+                {
 
-            operationHistory.Push(new Calculator.ResultHistory(
-                lastOperation,
-                param1,
-                param2
-                ));
+                    //Pass the value to param2
+                    param2 = parsedNumber;
 
-            param1 = lastOperation.Calculate(param1, param2);
-            return param1 ?? 0.00;
+                    //Calculate the result
+                    result = currentOperation.Calculate(param1, param2);
+
+                    //Save the operation
+                    operationHistory.Push(new Calculator.ResultHistory(
+                        currentOperation, 
+                        param1, 
+                        param2
+                        ));
+
+                    //Reassign values before ending
+                    param1 = result;
+                    lastOperation = currentOperation;
+                    currentOperation = oFactory.GetOperation(symbol);
+                    param2 = null;
+                }
+
+            //If it's not null - return result
+            //Else return 0.00
+            return result ?? 0.00;
         }
 
         /// <summary>
@@ -116,6 +140,14 @@ namespace CalculatorOperations
 
                 if (operationHistory.Count != 0)
                     lastOperation = operationHistory.Peek().operation;
+                else
+                    lastOperation = null;
+            }
+            else
+            {
+                param1 = null;
+                param2 = null;
+                lastOperation = null;
             }
         }
 

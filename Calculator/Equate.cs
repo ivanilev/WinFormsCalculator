@@ -10,7 +10,10 @@ namespace CalculatorOperations
     {
         public double Calculate(double? a, double? b)
         {
-            return (a ?? 0);
+            //3 = 12 returns 12; 
+            //3 = null returns null;
+            //null = null returns 0.00;
+            return (b ?? (a ?? 0.00));
         }
     }
 }

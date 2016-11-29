@@ -50,6 +50,8 @@ namespace CalculatorOperations.Tests
             result = sut.OnOperation("0,17=");
             Assert.That(result, Is.EqualTo(0.83));
         }
+
+        //1 = 12 should return 12;
         [Test]
         public void ShouldEquateParamToItself()
         {
@@ -57,6 +59,9 @@ namespace CalculatorOperations.Tests
 
             var result = sut.OnOperation("1=");
             Assert.That(result, Is.EqualTo(1));
+
+            result = sut.OnOperation("12=");
+            Assert.That(result, Is.EqualTo(12));
         }
         [Test]
         public void ShouldSaveClearAndRecallMemory()
@@ -96,6 +101,36 @@ namespace CalculatorOperations.Tests
             }
 
             Assert.That(() => sut.UndoOperation(), Throws.Nothing);
+        }
+        [Test]
+        public void ShouldCalculateAComplexEquation()
+        {
+            // 6 / 2 = [ 3 ] * 4 = [ 12 ] - 5 = [ 7 ] + 1 = [ 8 ]
+            var sut = new CalculatorController();
+
+            var result = sut.OnOperation("6/");
+            Assert.That(result, Is.EqualTo(6));
+
+            result = sut.OnOperation("2=");
+            Assert.That(result, Is.EqualTo(3));
+
+            result = sut.OnOperation("3*");
+            Assert.That(result, Is.EqualTo(3));
+
+            result = sut.OnOperation("4=");
+            Assert.That(result, Is.EqualTo(12));
+
+            result = sut.OnOperation("12-");
+            Assert.That(result, Is.EqualTo(12));
+
+            result = sut.OnOperation("5=");
+            Assert.That(result, Is.EqualTo(7));
+
+            result = sut.OnOperation("7+");
+            Assert.That(result, Is.EqualTo(7));
+
+            result = sut.OnOperation("1=");
+            Assert.That(result, Is.EqualTo(8));
         }
         [Test]
         public void ShouldThrowDivideByZeroException()
