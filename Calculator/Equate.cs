@@ -11,7 +11,7 @@ namespace CalculatorOperations
         public double Calculate(double? a, double? b)
         {
             //3 = 12 returns 12; 
-            //3 = null returns null;
+            //3 = null returns 3
             //null = null returns 0.00;
             return (b ?? (a ?? 0.00));
         }
