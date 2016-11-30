@@ -1,10 +1,7 @@
-﻿using System;
+﻿using Calculator;
+using CalculatorOperations.Factory;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CalculatorOperations
 {
@@ -14,13 +11,13 @@ namespace CalculatorOperations
         double? memory = null;
         double? param1;
         double? param2;
-        static Stack<Calculator.ResultHistory> operationHistory = new Stack<Calculator.ResultHistory>();
+        static Stack<ResultHistory> operationHistory = new Stack<ResultHistory>();
         
 
         IOperation currentOperation = null;
         IOperation lastOperation = null;
 
-        Factory.OperationFactory oFactory = new Factory.OperationFactory();
+        OperationFactory oFactory = new OperationFactory();
         
 
         public void SaveMemory(string textBox)
@@ -85,7 +82,7 @@ namespace CalculatorOperations
                     result = currentOperation.Calculate(param1, param2); //calculate the result
 
                     //Save operation
-                    operationHistory.Push(new Calculator.ResultHistory(
+                    operationHistory.Push(new ResultHistory(
                             currentOperation,
                             param1,
                             param2));
@@ -106,7 +103,7 @@ namespace CalculatorOperations
                     result = currentOperation.Calculate(param1, param2);
 
                     //Save the operation
-                    operationHistory.Push(new Calculator.ResultHistory(
+                    operationHistory.Push(new ResultHistory(
                         currentOperation, 
                         param1, 
                         param2
@@ -132,7 +129,7 @@ namespace CalculatorOperations
             //Remove the last operation from the stack and pass its parameters' values to the current parameters
             if (operationHistory.Count != 0)
             {
-                Calculator.ResultHistory theLastOperation = operationHistory.Pop();
+               ResultHistory theLastOperation = operationHistory.Pop();
                 
                 param1 = theLastOperation.param1;
                 currentOperation = theLastOperation.operation;
